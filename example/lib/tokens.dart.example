@@ -1,0 +1,19 @@
+import 'package:flutter/foundation.dart';
+
+class Tokens {
+  final String apiKey;
+  final String sessionId;
+  final String token;
+
+  Tokens({
+    @required this.apiKey,
+    @required this.sessionId,
+    @required this.token,
+  });
+}
+
+const TOKENS = const Tokens(
+  apiKey: "",
+  sessionId: "",
+  token: "",
+);

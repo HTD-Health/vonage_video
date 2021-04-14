@@ -2,6 +2,7 @@
 .dart_tool/
 .idea
 vonage_video.iml
+example/lib/tokens.dart
 
 .packages
 .pub/

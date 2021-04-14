@@ -12,6 +12,8 @@ dependencies:
   flutter:
     sdk: flutter
 
+  permission_handler: ^5.1.0
+
   vonage_video:
     # When depending on this package from a real application you should use:
     #   vonage_video: ^x.y.z
