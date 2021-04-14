@@ -8,6 +8,7 @@ class TokboxController: NSObject, FlutterPlatformViewFactory {
     private var publisher: OTPublisher?
     private var subscribers = Dictionary<String, OTSubscriber>()
     private var messenger: FlutterBinaryMessenger
+    private var publisherName = ""
     
     init(messenger: FlutterBinaryMessenger, channel: FlutterMethodChannel) {
         self.messenger = messenger
@@ -44,6 +45,7 @@ class TokboxController: NSObject, FlutterPlatformViewFactory {
     
     private func connect(call: FlutterMethodCall, result: FlutterResult) -> Void {
         let params = call.arguments as! Dictionary<String, String>
+        publisherName = params["publisherName"]!
         session = OTSession(apiKey: params["apiKey"]!, sessionId: params["sessionId"]!, delegate: self)
         var error: OTError?
         session?.connect(withToken: params["token"]!, error: &error)
@@ -62,7 +64,7 @@ class TokboxController: NSObject, FlutterPlatformViewFactory {
     
     private func publish(call: FlutterMethodCall, result: FlutterResult) -> Void {
         let settings = OTPublisherSettings()
-        settings.name = UIDevice.current.name
+        settings.name = publisherName
         publisher = OTPublisher(delegate: self, settings: settings)
         publisher?.viewScaleBehavior = OTVideoViewScaleBehavior.fit
         var error: OTError?

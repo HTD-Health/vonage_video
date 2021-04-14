@@ -25,6 +25,7 @@ class TokboxProvider
     lateinit var context: Context
     private var session: Session? = null
     private var publisher: Publisher? = null
+    private var publisherName = ""
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when (call.method) {
@@ -39,6 +40,7 @@ class TokboxProvider
 
     private fun connect(call: MethodCall, result: MethodChannel.Result) {
         val args = call.arguments as Map<String, String>
+        publisherName = args["publisherName"]!!
         session = Session.Builder(context, args["apiKey"], args["sessionId"]).build()
         session?.setSessionListener(this)
         try {
@@ -55,7 +57,7 @@ class TokboxProvider
     }
 
     private fun publish(call: MethodCall, result: MethodChannel.Result) {
-        publisher = Publisher.Builder(context).name("Publisher").build()
+        publisher = Publisher.Builder(context).name(publisherName).build()
         publisher?.setPublisherListener(this)
         session?.publish(publisher)
         result.success("success")
