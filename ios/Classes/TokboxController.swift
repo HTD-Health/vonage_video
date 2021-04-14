@@ -20,7 +20,6 @@ class TokboxController: NSObject, FlutterPlatformViewFactory {
         viewIdentifier viewId: Int64,
         arguments args: Any?
     ) -> FlutterPlatformView {
-        print(args);
         let viewId = args as! String
         if (viewId == "publisher") {
             return TokboxNativeView(view: publisher!.view!)
@@ -37,8 +36,8 @@ class TokboxController: NSObject, FlutterPlatformViewFactory {
             case "connect": connect(call: call, result: result); break
             case "disconnect": disconnect(result: result); break
             case "publish": publish(call: call, result: result); break
-            case "setAudioPublishing": noop(result: result); break
-            case "setVideoPublishing": noop(result: result); break
+            case "setAudioPublishing": setAudioPublishing(call: call, result: result); break
+            case "setVideoPublishing": setVideoPublishing(call: call, result: result); break
             default: result(FlutterMethodNotImplemented)
         }
     }
@@ -65,8 +64,21 @@ class TokboxController: NSObject, FlutterPlatformViewFactory {
         let settings = OTPublisherSettings()
         settings.name = UIDevice.current.name
         publisher = OTPublisher(delegate: self, settings: settings)
+        publisher?.viewScaleBehavior = OTVideoViewScaleBehavior.fit
         var error: OTError?
         session?.publish(publisher!, error: &error)
+        result("success")
+    }
+    
+    private func setAudioPublishing(call: FlutterMethodCall, result: FlutterResult) -> Void {
+        let state = call.arguments as! Bool
+        publisher?.publishAudio = state
+        result("success")
+    }
+    
+    private func setVideoPublishing(call: FlutterMethodCall, result: FlutterResult) -> Void {
+        let state = call.arguments as! Bool
+        publisher?.publishVideo = state
         result("success")
     }
 }

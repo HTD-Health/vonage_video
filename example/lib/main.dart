@@ -35,8 +35,8 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: SafeArea(
-        child: AnimatedBuilder(
+      home: Scaffold(
+        body: AnimatedBuilder(
           animation: vonage,
           builder: (context, snapshot) {
             return Stack(
@@ -53,6 +53,15 @@ class _MyAppState extends State<MyApp> {
                       child: VonagePublisherVideo(),
                     ),
                   ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: FloatingActionButton(
+                    onPressed: () => vonage.toggleAudioPublishing(),
+                    child: Icon(
+                      vonage.audioEnabled ? Icons.volume_up : Icons.volume_off,
+                    ),
+                  ),
+                ),
               ],
             );
           },
