@@ -83,13 +83,13 @@ class TokboxProvider
         val subscriber = Subscriber.Builder(context, stream).build()
         session?.subscribe(subscriber)
         subscribers[stream?.streamId!!] = subscriber
-        channel.invokeMethod("subscribersListUpdated", subscribers.keys.toList())
+        invokeSubscribersUpdate()
     }
 
     override fun onStreamDropped(session: Session?, stream: Stream?) {
         Log.d(TAG, "SessionListener::onStreamDropped")
         subscribers.remove(stream?.streamId)
-        channel.invokeMethod("subscribersListUpdated", subscribers.keys.toList())
+        invokeSubscribersUpdate()
     }
 
     override fun onConnected(session: Session?) {
@@ -133,6 +133,19 @@ class TokboxProvider
         }
     }
 
+    private fun invokeSubscribersUpdate() {
+        val subs = subscribers.values.map {
+            subscriberToMap(it)
+        }
+        channel.invokeMethod("subscribersListUpdated", subs)
+    }
+
+    private fun subscriberToMap(subscriber: Subscriber): HashMap<String, String> {
+        return hashMapOf(
+                "id" to subscriber.stream.streamId,
+                "name" to subscriber.stream.name
+        )
+    }
 }
 
 class TokboxVideoView(private val videoView: View) : PlatformView {

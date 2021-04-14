@@ -1,14 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+class VonageSubscriber {
+  final String id;
+  final String name;
+
+  VonageSubscriber(this.id, this.name);
+
+  @override
+  String toString() => {"id": id, "name": name}.toString();
+}
+
 class Vonage with ChangeNotifier {
   static const _channel = MethodChannel("vonage_video");
-  var _subscribers = <String>[];
+  var _subscribers = <VonageSubscriber>[];
   bool isPublishing = false;
   bool videoEnabled = true;
   bool audioEnabled = true;
 
-  List<String> get subscribers => _subscribers;
+  List<VonageSubscriber> get subscribers => _subscribers;
 
   Vonage() {
     _channel.setMethodCallHandler(_handler);
@@ -52,7 +62,6 @@ class Vonage with ChangeNotifier {
   }
 
   Future<void> _handler(MethodCall call) async {
-    print("Platform called: ${call.method}");
     switch (call.method) {
       case "sessionConnected":
         publish();
@@ -73,8 +82,11 @@ class Vonage with ChangeNotifier {
 
   void _updateSubscribersList(dynamic args) {
     try {
-      List ids = args as List;
-      _subscribers = ids.map((e) => e.toString()).toList();
+      List subs = args as List;
+      _subscribers = subs.map((element) {
+        final sub = Map<String, String>.from(element);
+        return VonageSubscriber(sub["id"], sub["name"]);
+      }).toList();
       print(subscribers);
     } catch (ex) {
       print(ex);

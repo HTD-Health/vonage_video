@@ -42,7 +42,7 @@ class _MyAppState extends State<MyApp> {
             return Stack(
               children: [
                 if (vonage.subscribers.isNotEmpty)
-                  VonageSubscriberVideo(id: vonage.subscribers.first),
+                  VonageSubscriberVideo(id: vonage.subscribers.first.id),
                 if (vonage.isPublishing)
                   Positioned(
                     right: 10,
