@@ -55,11 +55,31 @@ class _MyAppState extends State<MyApp> {
                   ),
                 Align(
                   alignment: Alignment.bottomCenter,
-                  child: FloatingActionButton(
-                    onPressed: () => vonage.toggleAudioPublishing(),
-                    child: Icon(
-                      vonage.audioEnabled ? Icons.volume_up : Icons.volume_off,
-                    ),
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: FloatingActionButton(
+                          onPressed: () => vonage.toggleVideoPublishing(),
+                          child: Icon(
+                            vonage.videoEnabled
+                                ? Icons.videocam
+                                : Icons.videocam_off,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: FloatingActionButton(
+                          onPressed: () => vonage.toggleAudioPublishing(),
+                          child: Icon(
+                            vonage.audioEnabled
+                                ? Icons.volume_up
+                                : Icons.volume_off,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
