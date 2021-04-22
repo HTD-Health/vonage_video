@@ -25,6 +25,7 @@ class VonageVideoPlugin: FlutterPlugin {
   }
 
   override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
+    tokboxProvider.disconnectFromSession();
     channel.setMethodCallHandler(null)
   }
 }

@@ -52,9 +52,13 @@ class TokboxController: NSObject, FlutterPlatformViewFactory {
         result("success")
     }
     
-    private func disconnect(result: FlutterResult) -> Void {
+    public func disconnectFromSession() {
         var error: OTError?
         session?.disconnect(&error)
+    }
+    
+    private func disconnect(result: FlutterResult) -> Void {
+        disconnectFromSession()
         result("success")
     }
     

@@ -51,6 +51,10 @@ class TokboxProvider
         }
     }
 
+    public fun disconnectFromSession() {
+        session?.disconnect()
+    }
+
     private fun disconnect(call: MethodCall, result: MethodChannel.Result) {
         session?.disconnect()
         result.success("success")

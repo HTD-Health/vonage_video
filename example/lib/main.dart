@@ -22,6 +22,12 @@ class _MyAppState extends State<MyApp> {
     _connectToSession();
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    vonage.disconnect();
+  }
+
   void _connectToSession() async {
     await Permission.camera.request();
     await Permission.microphone.request();
@@ -44,7 +50,16 @@ class _MyAppState extends State<MyApp> {
               return Stack(
                 children: [
                   if (vonage.subscribers.isNotEmpty)
-                    _subscriberView(vonage.subscribers.first),
+                    Positioned.fill(
+                      left: 0,
+                      top: 0,
+                      child: Column(
+                        children: [
+                          for (final sub in vonage.subscribers)
+                            Expanded(child: _subscriberView(sub)),
+                        ],
+                      ),
+                    ),
                   if (vonage.isPublishing)
                     Positioned(
                       right: 10,
