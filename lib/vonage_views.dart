@@ -28,7 +28,7 @@ class VonagePublisherVideo extends StatelessWidget {
 class VonageSubscriberVideo extends StatelessWidget {
   final String id;
 
-  VonageSubscriberVideo({Key key, @required this.id}) : super(key: key) {
+  VonageSubscriberVideo({Key? key, required this.id}) : super(key: key) {
     print("Creating view for subscriber=${this.id}");
   }
 

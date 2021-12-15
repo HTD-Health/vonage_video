@@ -25,10 +25,10 @@ class Vonage with ChangeNotifier {
   }
 
   Future<void> connect({
-    @required String publisherName,
-    @required String apiKey,
-    @required String sessionId,
-    @required String token,
+    required String publisherName,
+    required String apiKey,
+    required String sessionId,
+    required String token,
   }) async {
     await _channel.invokeMethod<dynamic>(
       "connect",
@@ -85,7 +85,7 @@ class Vonage with ChangeNotifier {
       List subs = args as List;
       _subscribers = subs.map((element) {
         final sub = Map<String, String>.from(element);
-        return VonageSubscriber(sub["id"], sub["name"]);
+        return VonageSubscriber(sub["id"]!, sub["name"]!);
       }).toList();
       print(subscribers);
     } catch (ex) {
