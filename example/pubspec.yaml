@@ -6,13 +6,14 @@ description: Demonstrates how to use the vonage_video plugin.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"
+  flutter: ^2.0.0
 
 dependencies:
   flutter:
     sdk: flutter
 
-  permission_handler: ^5.1.0
+  permission_handler: ^8.0.0
 
   vonage_video:
     # When depending on this package from a real application you should use:
