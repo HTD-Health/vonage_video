@@ -25,11 +25,11 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/vonage_video/ios"
 
 SPEC CHECKSUMS:
-  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
   OpenTok: 3ac356cce06545a573234582702abaf671d44909
   permission_handler: ccb20a9fad0ee9b1314a52b70b76b473c5f8dab0
   vonage_video: b5293ae0d53e5a65219f911e10a45eb28806ee2b
 
 PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.11.2
