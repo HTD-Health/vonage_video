@@ -10,6 +10,7 @@ import io.flutter.plugin.common.StandardMessageCodec
 import io.flutter.plugin.platform.PlatformView
 import io.flutter.plugin.platform.PlatformViewFactory
 import java.lang.IllegalArgumentException
+import android.view.ViewGroup
 
 const val TAG = "TOKBOX"
 
@@ -155,6 +156,11 @@ class TokboxProvider
 }
 
 class TokboxVideoView(private val videoView: View) : PlatformView {
+    init {
+        val parent = videoView.parent as ViewGroup?
+        parent?.removeView(videoView)
+    }
+
     override fun getView(): View {
         return videoView
     }
