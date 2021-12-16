@@ -67,7 +67,7 @@ class _MyAppState extends State<MyApp> {
                       child: Container(
                         width: 120,
                         height: 200,
-                        child: VonagePublisherVideo(),
+                        child: VonagePublisherVideo(scale: VonageVideoScale.FILL),
                       ),
                     ),
                   Align(
@@ -111,7 +111,7 @@ class _MyAppState extends State<MyApp> {
   Widget _subscriberView(VonageSubscriber subscriber) {
     return Stack(
       children: [
-        VonageSubscriberVideo(id: subscriber.id),
+        VonageSubscriberVideo(id: subscriber.id, scale: VonageVideoScale.FILL),
         Container(
           color: Color.fromRGBO(0, 0, 0, 0.7),
           child: Padding(

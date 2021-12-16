@@ -9,8 +9,8 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.StandardMessageCodec
 import io.flutter.plugin.platform.PlatformView
 import io.flutter.plugin.platform.PlatformViewFactory
-import java.lang.IllegalArgumentException
 import android.view.ViewGroup
+import kotlin.IllegalArgumentException
 
 const val TAG = "TOKBOX"
 
@@ -30,8 +30,8 @@ class TokboxProvider
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when (call.method) {
             "connect" -> connect(call, result)
-            "disconnect" -> disconnect(call, result)
-            "publish" -> publish(call, result)
+            "disconnect" -> disconnect(result)
+            "publish" -> publish(result)
             "setAudioPublishing" -> setAudioPublishing(call, result)
             "setVideoPublishing" -> setVideoPublishing(call, result)
             else -> result.notImplemented()
@@ -39,12 +39,12 @@ class TokboxProvider
     }
 
     private fun connect(call: MethodCall, result: MethodChannel.Result) {
-        val args = call.arguments as Map<String, String>
-        publisherName = args["publisherName"]!!
-        session = Session.Builder(context, args["apiKey"], args["sessionId"]).build()
+        val args = call.arguments as Map<*, *>
+        publisherName = args["publisherName"] as String
+        session = Session.Builder(context, args["apiKey"] as String, args["sessionId"] as String).build()
         session?.setSessionListener(this)
         try {
-            session?.connect(args["token"])
+            session?.connect(args["token"] as String)
             result.success("success")
         } catch (e: Exception) {
             result.error("error", e.message, null)
@@ -55,12 +55,12 @@ class TokboxProvider
         session?.disconnect()
     }
 
-    private fun disconnect(call: MethodCall, result: MethodChannel.Result) {
+    private fun disconnect(result: MethodChannel.Result) {
         session?.disconnect()
         result.success("success")
     }
 
-    private fun publish(call: MethodCall, result: MethodChannel.Result) {
+    private fun publish(result: MethodChannel.Result) {
         publisher = Publisher.Builder(context).name(publisherName).build()
         publisher?.setPublisherListener(this)
         session?.publish(publisher)
@@ -70,11 +70,13 @@ class TokboxProvider
     private fun setAudioPublishing(call: MethodCall, result: MethodChannel.Result) {
         val status = call.arguments as Boolean
         publisher?.publishAudio = status
+        result.success("success")
     }
 
     private fun setVideoPublishing(call: MethodCall, result: MethodChannel.Result) {
         val status = call.arguments as Boolean
         publisher?.publishVideo = status
+        result.success("success")
     }
 
     private fun getSubscriberForStreamId(id: String): Subscriber? {
@@ -133,11 +135,26 @@ class TokboxProvider
 
     // PlatformViewFactory methods
 
+    private fun parseVideoScale(scale: String?): String {
+        return when (scale) {
+            "VideoStyleFill" -> BaseVideoRenderer.STYLE_VIDEO_FILL
+            "VideoStyleFit" -> BaseVideoRenderer.STYLE_VIDEO_FIT
+            else -> throw IllegalArgumentException("Video Renderer scale '$scale' unknown")
+        }
+    }
+
     override fun create(context: Context?, viewId: Int, args: Any?): PlatformView {
         Log.d(TAG, "Created platform view for id $viewId")
-        return when (val id = args as String) {
-            "publisher" -> TokboxVideoView(publisher!!.view)
-            else -> TokboxVideoView(getSubscriberForStreamId(id)!!.view)
+        val argMap = args as Map<*, *>
+        val id = argMap["id"] ?: ""
+        val videoScale = parseVideoScale(argMap["scale"] as String)
+        return if (id == "publisher") {
+            publisher!!.renderer.setStyle(BaseVideoRenderer.STYLE_VIDEO_SCALE, videoScale)
+            TokboxVideoView(publisher!!.view)
+        } else {
+            val subscriber = getSubscriberForStreamId(id as String)!!
+            subscriber.renderer.setStyle(BaseVideoRenderer.STYLE_VIDEO_SCALE, videoScale)
+            TokboxVideoView(subscriber.view)
         }
     }
 
