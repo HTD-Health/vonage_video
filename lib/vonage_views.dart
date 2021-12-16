@@ -3,7 +3,38 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+class VonageVideoScale {
+  const VonageVideoScale(this._value);
+
+  static const FIT = VonageVideoScale("VideoStyleFit");
+  static const FILL = VonageVideoScale("VideoStyleFill");
+
+  final String _value;
+
+  @override
+  String toString() => _value;
+}
+
+class _CreationParams {
+  final String id;
+  final VonageVideoScale scale;
+
+  _CreationParams({required this.id, required this.scale});
+
+  Map<String, String> toMap() => {
+    "id": id,
+    "scale": scale.toString(),
+  };
+}
+
 class VonagePublisherVideo extends StatelessWidget {
+  const VonagePublisherVideo({
+    Key? key,
+    this.scale = VonageVideoScale.FILL,
+  }) : super(key: key);
+
+  final VonageVideoScale scale;
+
   @override
   Widget build(BuildContext context) {
     final String viewType = "vonage_video_view";
@@ -11,14 +42,14 @@ class VonagePublisherVideo extends StatelessWidget {
       return UiKitView(
         viewType: viewType,
         layoutDirection: TextDirection.ltr,
-        creationParams: "publisher",
+        creationParams: _CreationParams(id: "publisher", scale: scale).toMap(),
         creationParamsCodec: const StandardMessageCodec(),
       );
     if (Platform.isAndroid)
       return AndroidView(
         viewType: viewType,
         layoutDirection: TextDirection.ltr,
-        creationParams: "publisher",
+        creationParams: _CreationParams(id: "publisher", scale: scale).toMap(),
         creationParamsCodec: const StandardMessageCodec(),
       );
     throw ArgumentError.value("Unsupported platform");
@@ -26,11 +57,14 @@ class VonagePublisherVideo extends StatelessWidget {
 }
 
 class VonageSubscriberVideo extends StatelessWidget {
-  final String id;
+  const VonageSubscriberVideo({
+    Key? key,
+    required this.id,
+    this.scale = VonageVideoScale.FILL,
+  }) : super(key: key);
 
-  VonageSubscriberVideo({Key? key, required this.id}) : super(key: key) {
-    print("Creating view for subscriber=${this.id}");
-  }
+  final String id;
+  final VonageVideoScale scale;
 
   @override
   Widget build(BuildContext context) {
@@ -39,14 +73,14 @@ class VonageSubscriberVideo extends StatelessWidget {
       return UiKitView(
         viewType: viewType,
         layoutDirection: TextDirection.ltr,
-        creationParams: id,
+        creationParams: _CreationParams(id: id, scale: scale).toMap(),
         creationParamsCodec: const StandardMessageCodec(),
       );
     if (Platform.isAndroid)
       return AndroidView(
         viewType: viewType,
         layoutDirection: TextDirection.ltr,
-        creationParams: id,
+        creationParams: _CreationParams(id: id, scale: scale).toMap(),
         creationParamsCodec: const StandardMessageCodec(),
       );
     throw ArgumentError.value("Unsupported platform");
